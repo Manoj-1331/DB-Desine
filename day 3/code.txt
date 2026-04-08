@@ -1,0 +1,181 @@
+# Hospital / Clinic Management System - README
+
+## Overview
+
+This database schema represents a complete hospital or clinic management system. It covers the full lifecycle of a patient, starting from registration to consultation, testing, reporting, and payment.
+
+The system is designed to maintain structured relationships between patients, doctors, appointments, medical records, and financial transactions.
+
+---
+
+## Entities and Attributes
+
+### Patient
+
+Stores basic information about patients.
+
+* id (Primary Key)
+* name
+* phone
+* email
+* gender
+* dateOfBirth
+* createdAt
+* updatedAt
+
+---
+
+### Doctor
+
+Stores doctor details.
+
+* id (Primary Key)
+* name
+* phone
+* email
+* specialtyId (Foreign Key)
+* experience
+
+---
+
+### Specialty
+
+Defines medical specialties.
+
+* id (Primary Key)
+* name
+* description
+
+---
+
+### Appointment
+
+Represents scheduled meetings between patients and doctors.
+
+* id (Primary Key)
+* patientId (Foreign Key)
+* doctorId (Foreign Key)
+* appointmentDate
+* status (booked, completed, cancelled, no-show)
+* issue
+
+---
+
+### Consultation
+
+Represents an actual visit after an appointment.
+
+* id (Primary Key)
+* appointmentId (Foreign Key)
+* patientId (Foreign Key)
+* doctorId (Foreign Key)
+* visitDate
+* notes
+* diagnosis
+
+---
+
+### Test
+
+Defines available medical tests.
+
+* id (Primary Key)
+* name
+* description
+* price
+
+---
+
+### Prescribed Test
+
+Represents tests prescribed during a consultation.
+
+* id (Primary Key)
+* consultationId (Foreign Key)
+* testId (Foreign Key)
+* status (prescribed, completed)
+
+---
+
+### Report
+
+Stores results of prescribed tests.
+
+* id (Primary Key)
+* prescribedTestId (Foreign Key)
+* result
+* reportDate
+* status (pending, ready)
+
+---
+
+### Payment
+
+Stores payment details for consultations.
+
+* id (Primary Key)
+* patientId (Foreign Key)
+* consultationId (Foreign Key)
+* amount
+* payment_type (UPI, cash, card)
+* status (paid, pending, failed)
+* paymentDate
+
+---
+
+## Relationships
+
+* A patient can have multiple appointments
+  patient.id < appointment.patientId
+
+* A doctor can have multiple appointments
+  doctor.id < appointment.doctorId
+
+* A doctor belongs to one specialty
+  specialty.id < doctor.specialtyId
+
+* An appointment leads to one consultation
+  appointment.id - consultation.appointmentId
+
+* A patient can have multiple consultations
+  patient.id < consultation.patientId
+
+* A doctor can have multiple consultations
+  doctor.id < consultation.doctorId
+
+* A consultation can have multiple prescribed tests
+  consultation.id < prescribed_test.consultationId
+
+* Each test can be prescribed multiple times
+  test.id < prescribed_test.testId
+
+* Each prescribed test has one report
+  prescribed_test.id - report.prescribedTestId
+
+* A patient can make multiple payments
+  patient.id < payment.patientId
+
+* Each consultation is linked to a payment
+  consultation.id < payment.consultationId
+
+---
+
+## System Flow
+
+1. A patient registers in the system.
+2. Doctors are defined and assigned specialties.
+3. The patient books an appointment with a doctor.
+4. After the appointment, a consultation record is created.
+5. During the consultation, the doctor may prescribe tests.
+6. Tests are performed and reports are generated.
+7. Payment is recorded for the consultation and related services.
+
+---
+
+## Summary
+
+The system follows this structured flow:
+
+Patient → Appointment → Consultation → Prescribed Test → Report → Payment
+
+This schema ensures proper tracking of medical history, doctor interactions, diagnostics, and financial transactions in a clinic or hospital environment.
