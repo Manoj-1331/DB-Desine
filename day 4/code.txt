@@ -1,0 +1,88 @@
+vehicle [icon: car] {
+  id string pk
+  vehicleNumber string
+  vehicleCategoryId string fk
+  ownerName string
+  createdAt date
+}
+
+vehicle_category [icon: tag] {
+  id string pk
+  name string
+}
+
+parking_zone [icon: map] {
+  id string pk
+  name string
+  description string
+}
+
+parking_level [icon: layers] {
+  id string pk
+  zoneId string fk
+  levelNumber int
+}
+
+parking_spot [icon: square] {
+  id string pk
+  levelId string fk
+  spotNumber string
+  spotCategoryId string fk
+  isAvailable boolean
+}
+
+parking_spot_category [icon: grid] {
+  id string pk
+  name string
+}
+
+access_category [icon: shield] {
+  id string pk
+  name string
+  description string
+}
+
+parking_ticket [icon: ticket] {
+  id string pk
+  ticketNumber string
+  vehicleId string fk
+  issuedAt datetime
+}
+
+parking_session [icon: clock] {
+  id string pk
+  vehicleId string fk
+  spotId string fk
+  ticketId string fk
+  accessCategoryId string fk
+  entryTime datetime
+  exitTime datetime
+  status string
+}
+
+payment [icon: credit-card] {
+  id string pk
+  sessionId string fk
+  amount number
+  paymentMethod string
+  status string
+  paymentTime datetime
+}
+
+
+vehicle_category.id < vehicle.vehicleCategoryId
+vehicle.id < parking_ticket.vehicleId
+vehicle.id < parking_session.vehicleId
+
+parking_zone.id < parking_level.zoneId
+parking_level.id < parking_spot.levelId
+
+parking_spot_category.id < parking_spot.spotCategoryId
+parking_spot.id < parking_session.spotId
+
+parking_ticket.id - parking_session.ticketId
+
+access_category.id < parking_session.accessCategoryId
+
+parking_session.id - payment.sessionId
+
